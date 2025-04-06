@@ -188,3 +188,24 @@ body:not(.is-grabbing)
 .better-search-views-is-hidden {
   display: none;
 }
+
+/* Create uniform padding for file match markdown preview */
+[class*="file-match"] {
+  padding: 0em;
+}
+[class*="file-match"] .markdown-preview-view {
+  padding: 0.5em;
+}
+/* Remove unneeded file match empty scrollbar region */
+[class*="file-match"] ::-webkit-scrollbar {
+  display: none;
+}
+
+/* Automatically scroll to the start of linked headings/blocks/sections */
+.markdown-preview-view:has(.is-flashing),
+.cm-scroller:has(.is-flashing) {
+ scroll-snap-type: y mandatory;
+}
+.is-flashing, .cm-active {
+ scroll-snap-align: start;
+}

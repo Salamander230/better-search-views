@@ -25,7 +25,17 @@ const PluginContext = createContext<PluginContextValue>();
 
 export function PluginContextProvider(props: PluginContextProps) {
   const handleClick = async (event: MouseEvent, path: string, line: number) => {
-    if (event.target instanceof HTMLAnchorElement) {
+    const target = event.target as HTMLElement;
+    // do not open backlinked file if certain elements are clicked
+    if (target.closest("a, .callout, img, audio, video, .task-list-item-checkbox") && !target.closest(".internal-link")) {
+      return;
+    }
+    
+    // if clicked element is an internal link, open it in a new tab
+    if (target.closest(".internal-link")) {
+      const link = target.closest(".internal-link") as HTMLAnchorElement;
+      path = decodeURI(link.href.replace("app://obsidian.md/", ""));
+      await props.plugin.app.workspace.openLinkText(path, path, true);
       return;
     }
 
@@ -38,8 +48,9 @@ export function PluginContextProvider(props: PluginContextProps) {
       new Notice(`File ${path} does not exist`);
       return;
     }
-
-    await props.plugin.app.workspace.getLeaf(false).openFile(file);
+    
+    // open backlinked file in a new tab by default
+    await props.plugin.app.workspace.getLeaf(true).openFile(file);
 
     const activeMarkdownView =
       props.plugin.app.workspace.getActiveViewOfType(MarkdownView);
@@ -67,8 +78,17 @@ export function PluginContextProvider(props: PluginContextProps) {
       return;
     }
 
+    const target = event.target as HTMLElement;
+    
+    // show page preview on internal link hover
+    if (target.closest(".internal-link")) {
+      const link = target.closest(".internal-link") as HTMLAnchorElement;
+      path = decodeURI(link.href.replace("app://obsidian.md/", ""));
+      props.plugin.app.workspace.trigger("link-hover", {}, target, path, "");
+      return;
+    }
+
     if (Keymap.isModifier(event, "Mod")) {
-      const target = event.target as HTMLElement;
       const previewLocation = {
         scroll: line,
       };
