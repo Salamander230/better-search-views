@@ -194,7 +194,7 @@ body:not(.is-grabbing)
   padding: 0em;
 }
 [class*="file-match"] .markdown-preview-view {
-  padding: 0.5em;
+  padding: 0.5em !important;
 }
 /* Remove unneeded file match empty scrollbar region */
 [class*="file-match"] ::-webkit-scrollbar {
