@@ -196,9 +196,9 @@ body:not(.is-grabbing)
 [class*="file-match"] .markdown-preview-view {
   padding: 0.5em !important;
 }
-/* Remove unneeded file match empty scrollbar region */
-[class*="file-match"] ::-webkit-scrollbar {
-  display: none;
+/* Only show file match scrollbar region when needed */
+[class*="file-match"] {
+  overflow: visible;
 }
 
 /* Automatically scroll to the start of linked headings/blocks/sections */
